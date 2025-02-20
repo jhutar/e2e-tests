@@ -11,12 +11,12 @@ jobs:
       matrix:
         cluster:
           - label: stone-prd-rh01
-            repo: https://github.com/rhtap-perf-test/nodejs-devfile-sample
+            repo: https://github.com/rhtap-perf-test/nodejs-devfile-sample1
             member_cluster_secret: MEMBER_CLUSTER_STONE_PRD_RH01
             ocp_prometheus_token_secret: OCP_PROMETHEUS_TOKEN_STONE_PRD_RH01
             users_secret: USERS_STONE_PRD_RH01
           - label: stone-stg-rh01
-            repo: https://github.com/rhtap-perf-test/nodejs-devfile-sample
+            repo: https://github.com/rhtap-perf-test/nodejs-devfile-sample2
             member_cluster_secret: MEMBER_CLUSTER_STONE_STG_RH01
             ocp_prometheus_token_secret: OCP_PROMETHEUS_TOKEN_STONE_STG_RH01
             users_secret: USERS_STONE_STG_RH01
