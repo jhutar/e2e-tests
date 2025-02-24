@@ -25,11 +25,11 @@ jobs:
           ###  member_cluster_secret: MEMBER_CLUSTER_STONE_PROD_P02
           ###  ocp_prometheus_token_secret: OCP_PROMETHEUS_TOKEN_STONE_PROD_P02
           ###  users_secret: USERS_STONE_PROD_P02
-          ###- label: stone-stage-p01
-          ###  repo: https://github.com/rhtap-perf-test/nodejs-devfile-sample4
-          ###  member_cluster_secret: MEMBER_CLUSTER_STONE_STAGE_P01
-          ###  ocp_prometheus_token_secret: OCP_PROMETHEUS_TOKEN_STONE_STAGE_P01
-          ###  users_secret: USERS_STONE_STAGE_P01
+          - label: stone-stage-p01
+            repo: https://gitlab.cee.redhat.com/jhutar/nodejs-devfile-sample4
+            member_cluster_secret: MEMBER_CLUSTER_STONE_STAGE_P01
+            ocp_prometheus_token_secret: OCP_PROMETHEUS_TOKEN_STONE_STAGE_P01
+            users_secret: USERS_STONE_STAGE_P01
 
     runs-on: ubuntu-latest
     timeout-minutes: 120
