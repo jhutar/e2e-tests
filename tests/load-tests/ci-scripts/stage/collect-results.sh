@@ -27,9 +27,6 @@ find . -maxdepth 1 -type f -name 'load-test-options.json' -exec cp -vf {} "${ART
 find . -maxdepth 1 -type d -name 'collected-data' -exec cp -r {} "${ARTIFACT_DIR}" \;
 
 echo "[$(date --utc -Ins)] Setting up Python venv"
-set -x
-ls -alh
-ls -alh "${ARTIFACT_DIR}/"
 {
 python3 -m venv venv
 set +u
