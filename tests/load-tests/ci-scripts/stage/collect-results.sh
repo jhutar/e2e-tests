@@ -11,7 +11,9 @@ echo "[$(date --utc -Ins)] Collecting load test results"
 # Setup directories
 ARTIFACT_DIR=${ARTIFACT_DIR:-artifacts}
 mkdir -p ${ARTIFACT_DIR}
+pwd
 pushd "${2:-./tests/load-tests}"
+pwd
 
 # Construct $PROMETHEUS_HOST by extracting BASE_URL from $MEMBER_CLUSTER
 BASE_URL=$(echo $MEMBER_CLUSTER | grep -oP 'https://api\.\K[^:]+')
