@@ -196,7 +196,7 @@ func (g *Github) ForkRepository(sourceName, targetName string) (*github.Reposito
 				return false, nil
 			}
 			if resp.StatusCode == 500 {
-				// This catches error 500 seen few times
+				// TODO
 				fmt.Printf("Warning, got 500: %s", resp.Body)
 				return false, nil
 			}
