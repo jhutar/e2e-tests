@@ -56,7 +56,6 @@ jobs:
       env:
         USERS: ${{ secrets[matrix.cluster.users_secret] }}
       run: echo "$USERS" > users.json
-
     - name: Run Load Test
       working-directory: ./tests/load-tests
       env:
