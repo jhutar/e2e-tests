@@ -29,6 +29,7 @@ import multiprocessing
 import queue
 import os.path
 import sys
+import traceback
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 import playwright_lib
@@ -38,54 +39,71 @@ PLAYWRIGHT_VIDEO_DIR = "videos/"
 
 
 def workload(user):
-    username = user["username"].replace("-", "_")
-    password = user["password"]
+    try:
+        username = user["username"].replace("-", "_")
+        password = user["password"]
 
-    with playwright.sync_api.sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=PLAYWRIGHT_HEADLESS,
-        )
-        context = browser.new_context(
-            record_video_dir=PLAYWRIGHT_VIDEO_DIR,
-        )
-        page = context.new_page()
-
-        playwright_lib.goto_login_and_accept_cookies(page)
-
-        playwright_lib.form_login(page, username, password)
-
-        # Go to OpenShift Token page
-        page.goto("https://console.dev.redhat.com/openshift/token")
-        page.wait_for_url("https://console.dev.redhat.com/openshift/token**")
-        page.wait_for_selector('//h2[text()="Connect with offline tokens"]')
-
-        # Wait for token
-        button_token = page.locator('//button[text()="Load token"]')
-        if button_token.is_visible():
-            button_token.click()
-        attempt = 1
-        attempt_max = 100
-        while True:
-            input_token = page.locator(
-                '//input[@aria-label="Copyable token" and not(contains(@value, "ocm login "))]'
+        print(username)
+        with playwright.sync_api.sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=PLAYWRIGHT_HEADLESS,
             )
-            input_token_value = input_token.get_attribute("value")
-            # Token value is populated assynchronously, so call it ready once
-            # it is longer than string "" or "null"
-            if len(input_token_value) > 10:
-                break
-            if attempt > attempt_max:
-                input_token_value = "Failed"
-                break
-            attempt += 1
-            time.sleep(1)
-        print(f"Token for user {username}: {input_token_value}")
+            print("test")
+            print(browser)
+            context = browser.new_context(
+                record_video_dir=PLAYWRIGHT_VIDEO_DIR,
+            )
+            page = context.new_page()
 
-        page.close()
-        browser.close()
+            playwright_lib.goto_login_and_accept_cookies(page)
 
-        user["token"] = input_token_value
-        return user
+            playwright_lib.form_login(page, username, password)
+
+            # Go to OpenShift Token page
+            page.goto("https://console.dev.redhat.com/openshift/token")
+            page.wait_for_url("https://console.dev.redhat.com/openshift/token**")
+
+            page.locator('a:has-text("use API tokens to authenticate")').click()
+
+            header_locator = page.locator('//h2[text()="Connect with offline tokens"]')
+            if header_locator.is_visible():
+                print("Offline token section is visible.")
+            else:
+                print("Offline token section is not visible. Skipping.")
+
+            # Wait for token
+            print("waiting for token")
+            button_token = page.locator('//button[text()="Load token"]')
+            if button_token.is_visible():
+                button_token.click()
+            attempt = 1
+            attempt_max = 100
+            while True:
+                input_token = page.locator(
+                    '//input[@aria-label="Copyable token" and not(contains(@value, "ocm login "))]'
+                )
+                input_token_value = input_token.get_attribute("value")
+                # Token value is populated assynchronously, so call it ready once
+                # it is longer than string "" or "null"
+                if len(input_token_value) > 10:
+                    break
+                if attempt > attempt_max:
+                    input_token_value = "Failed"
+                    break
+                attempt += 1
+                time.sleep(1)
+            print(f"Token for user {username}: {input_token_value}")
+
+            page.close()
+            browser.close()
+
+            user["token"] = input_token_value
+            return user
+        
+    except Exception as e:
+        print(f"[ERROR] Failed while processing {user['username']}")
+        traceback.print_exc()
+        raise
 
 
 def process_it(output_queue, user):
@@ -102,10 +120,12 @@ def main():
 
     users_new = []
     users_allowlist = []  # keep empty to allow all
+    print(users_allowlist)
 
     for user in users:
-        if users_allowlist is not [] and user["username"] not in users_allowlist:
-            continue
+        print(user["username"])
+       # if users_allowlist is not [] and user["username"] not in users_allowlist:
+       #     continue
         result_queue = multiprocessing.Queue()
         process = multiprocessing.Process(target=process_it, args=(result_queue, user))
         process.start()
