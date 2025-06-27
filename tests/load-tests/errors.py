@@ -18,6 +18,7 @@ COLUMN_MESSAGE = 2
 # Errors patterns we recognize (when newlines were removed)
 ERRORS = {
     "Application creation timed out waiting for quota evaluation": r"Application failed creation: Unable to create the Application .*: Internal error occurred: resource quota evaluation timed out",
+    "Build Pipeline Run failed run": r"PipelineRun for component .* in namespace .* failed: .* was cancelled",
     "Build Pipeline Run was cancelled" : r"Build Pipeline Run failed run: PipelineRun for component [\w-]+ in namespace [\w-]+ failed: .* Reason:Cancelled .* Message:PipelineRun .* was cancelled",
     "Component creation timed out waiting for image-controller annotations": r"Component failed creation: Unable to create the Component .* timed out when waiting for image-controller annotations to be updated on component",
     "Couldnt get pipeline via bundles resolver from quay.io due to 429": r"Message:Error retrieving pipeline for pipelinerun .*bundleresolver.* cannot retrieve the oci image: GET https://quay.io/v2/.*unexpected status code 429 Too Many Requests",
@@ -26,6 +27,7 @@ ERRORS = {
     "Couldnt get task via buldles resolver from quay.io due to 429": r"Message:.*Couldn't retrieve Task .*resolver type bundles.*https://quay.io/.* status code 429 Too Many Requests",
     "Couldnt get task via git resolver from gitlab.cee due to 429": r"Message:.*Couldn't retrieve Task .*resolver type git.*https://gitlab.cee.redhat.com/.* status code: 429",
     "Couldnt get task via http resolver from gitlab.cee": r"Message:.*Couldn't retrieve Task .*resolver type http.*error getting.*requested URL .*https://gitlab.cee.redhat.com/.* is not found",
+    "Error deleting on-pull-request default PipelineRun": r"Repo-templating workflow component cleanup failed: Error deleting on-pull-request default PipelineRun in namespace .*: Unable to list PipelineRuns for component .* in namespace .*: context deadline exceeded",
     "Failed Integration test scenario when calling dintegrationtestscenario.kb.io webhook": r"Integration test scenario failed creation: Unable to create the Integration Test Scenario .*: Internal error occurred: failed calling webhook .*dintegrationtestscenario.kb.io.*: failed to call webhook: Post .*https://integration-service-webhook-service.integration-service.svc:443/mutate-appstudio-redhat-com-v1beta2-integrationtestscenario.*: no endpoints available for service .*integration-service-webhook-service",
     "Failed application creation when calling mapplication.kb.io webhook": r"Application failed creation: Unable to create the Application .*: Internal error occurred: failed calling webhook .*mapplication.kb.io.*: failed to call webhook: Post .*https://application-service-webhook-service.application-service.svc:443/mutate-appstudio-redhat-com-v1alpha1-application.* no endpoints available for service .*application-service-webhook-service",
     "Failed component creation because resource quota evaluation timed out": r"Component failed creation: Unable to create the Component .*: Internal error occurred: resource quota evaluation timed out",
@@ -38,10 +40,12 @@ ERRORS = {
     "GitLab token used by test expired": r"Repo forking failed: Error deleting project .*: DELETE https://gitlab.cee.redhat.com/.*: 401 .*error: invalid_token.*error_description: Token is expired. You can either do re-authorization or token refresh",
     "Pipeline failed": r"Message:Tasks Completed: [0-9]+ \(Failed: [1-9]+,",
     "Post-test data collection failed": r"Failed to collect pipeline run JSONs",
+    "Release failure: PipelineRun not created": r"couldn't find PipelineRun in managed namespace .* for a release .* in .* namespace because of err:'%!w(<nil>)'",
     "Repo forking failed as GitLab CEE says 401 Unauthorized": r"Repo forking failed: Error deleting project .*: DELETE https://gitlab.cee.redhat.com/.*: 401 .*message: 401 Unauthorized.*",
     "Repo forking failed as the target is still being deleted": r"Repo forking failed: Error forking project .* POST https://gitlab.cee.redhat.com.* 409 .*Project namespace name has already been taken, The project is still being deleted",
     "Repo forking failed because gitlab.com returned 503": r"Repo forking failed: Error checking repository .*: GET https://api.github.com/repos/.*: 503 No server is currently available to service your request. Sorry about that. Please try resubmitting your request and contact us if the problem persists.*",
     "Repo forking failed when deleting target repo on gitlab.com (not CEE!) due unathorized": r"Repo forking failed: Error deleting project .* DELETE https://gitlab.com/.* 401 .* Unauthorized",
+    "Snapshot failed creation": r"Snapshot failed creation: context deadline exceeded",
     "Timeout forking the repo before the actual test": r"Repo forking failed: Error forking project .*: context deadline exceeded",
     "Timeout getting build service account": r"Component build SA failed creation: Component build SA .* not created: context deadline exceeded",
     "Timeout getting pipeline": r"Message:.*resolver failed to get Pipeline.*resolution took longer than global timeout of .*",
