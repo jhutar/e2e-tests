@@ -57,16 +57,19 @@ ERRORS = {
 }
 
 FAILED_PLR_ERRORS = {
+    "Can not find chroot_scan.tar.gz file": r"tar: .*/chroot_scan.tar.gz: Cannot open: No such file or directory",
     "DNF failed to download repodata from Koji": r"ERROR Command returned error: Failed to download metadata (baseurl: \"https://kojipkgs.fedoraproject.org/repos/[^ ]*\") for repository \"build\": Usable URL not found",
     "Error allocating host as provision TR already exists": r"Error allocating host: taskruns.tekton.dev \".*provision\" already exists",
-    "Error creating build container: 403 Forbidden": r"Error: creating build container .* 403 Forbidden .*",
+    "Error cannot find Dockerfile": r"Cannot find Dockerfile Dockerfile .*",
+    "Error creating build containter: 403 forbidden": r"internal error: unable to copy from source .* 403 Forbidden .*",
+    "Error in configuration - option config_opts['root'] must be present in your config" : r"option config_opts['root'] must be present in your config .*",
     "Failed because of quay.io returned 502": r"level=fatal msg=.Error parsing image name .*docker://quay.io/.* Requesting bearer token: invalid status code from registry 502 .Bad Gateway.",
     "Failed because registry.access.redhat.com returned 503 when reading manifest": r"source-build:ERROR:command execution failure, status: 1, stderr: time=.* level=fatal msg=.Error parsing image name .* reading manifest .* in registry.access.redhat.com/.* received unexpected HTTP status: 503 Service Unavailable",
+    "Introspection failed because of incomplete .docker/config.json": r".* level=fatal msg=\"Error parsing image name .*: getting username and password: reading JSON file .*/tekton/home/.docker/config.json.*: unmarshaling JSON at .*: unexpected end of JSON input\"",
     "RPM build failed: bool cannot be defined via typedef": r"error: .bool. cannot be defined via .typedef..*error: Bad exit status from /var/tmp/rpm-tmp..* ..build.",
-    "skip": r"skipping step because a previous step failed",
-    "unexpected end of JSON input" : r"Error parsing image name .* unexpected end of JSON input .*",
+    "SKIP": r"Skipping step because a previous step failed",
+    "buildah build failed creating build container: registry.access.redhat.com returned 403": r"Error: creating build container: internal error: unable to copy from source docker://registry.access.redhat.com/.*: copying system image from manifest list: determining manifest MIME type for docker://registry.access.redhat.com/.*: reading manifest .* in registry.access.redhat.com/.*: StatusCode: 403",
 }
-
 
 def message_to_reason(reasons_and_errors: dict, msg: str) -> str | None:
     """
