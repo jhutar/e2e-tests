@@ -64,6 +64,7 @@ FAILED_PLR_ERRORS = {
     "Failed because registry.access.redhat.com returned 503 when reading manifest": r"source-build:ERROR:command execution failure, status: 1, stderr: time=.* level=fatal msg=.Error parsing image name .* reading manifest .* in registry.access.redhat.com/.* received unexpected HTTP status: 503 Service Unavailable",
     "RPM build failed: bool cannot be defined via typedef": r"error: .bool. cannot be defined via .typedef..*error: Bad exit status from /var/tmp/rpm-tmp..* ..build.",
     "skip": r"skipping step because a previous step failed",
+    "unexpected end of JSON input" : r"Error parsing image name .* unexpected end of JSON input .*",
 }
 
 
