@@ -18,7 +18,9 @@ COLUMN_MESSAGE = 2
 # Errors patterns we recognize (when newlines were removed)
 ERRORS = {
     "Application creation timed out waiting for quota evaluation": r"Application failed creation: Unable to create the Application .*: Internal error occurred: resource quota evaluation timed out",
-    "Build Pipeline Run was cancelled" : r"Build Pipeline Run failed run: PipelineRun for component .* in namespace .* failed: .*",
+    "Build Pipeline Run was cancelled" : r"Build Pipeline Run failed run: PipelineRun for component .* in namespace .* failed: .* was cancelled",
+    "Build Pipeline Run was cancelled with reason" : r"Build Pipeline Run failed run: PipelineRun for component .* in namespace .* failed: .*Reason:Cancelled Message:PipelineRun .* was cancelled",
+    "cannot set blockOwnerDeletion if an ownerReference refers to a resource you can't set finalizers on": r"Unable to create the Integration Test Scenario .* is forbidden: cannot set blockOwnerDeletion if an ownerReference refers to a resource you can't set finalizers on:",
     "Component creation timed out waiting for image-controller annotations": r"Component failed creation: Unable to create the Component .* timed out when waiting for image-controller annotations to be updated on component",
     "Couldnt get pipeline via bundles resolver from quay.io due to 429": r"Message:Error retrieving pipeline for pipelinerun .*bundleresolver.* cannot retrieve the oci image: GET https://quay.io/v2/.*unexpected status code 429 Too Many Requests",
     "Couldnt get pipeline via git resolver from gitlab.cee due to 429": r"Message:.*resolver failed to get Pipeline.*error requesting remote resource.*Git.*https://gitlab.cee.redhat.com/.* status code: 429",
@@ -33,9 +35,11 @@ ERRORS = {
     "Failed component creation when calling mcomponent.kb.io webhook": r"Component failed creation: Unable to create the Component .*: Internal error occurred: failed calling webhook .*mcomponent.kb.io.*: failed to call webhook: Post .*https://application-service-webhook-service.application-service.svc:443/mutate-appstudio-redhat-com-v1alpha1-component.* no endpoints available for service .*application-service-webhook-service.*",
     "Failed creating integration test scenario because it already exists": r"Integration test scenario failed creation: Unable to create the Integration Test Scenario .* integrationtestscenarios.appstudio.redhat.com .* already exists",
     "Failed to link pipeline image pull secret to build service account because SA was not found": r"Failed to configure pipeline imagePullSecrets: Unable to add secret .* to service account .*: serviceaccounts .* not found",
+    "Failed because quay.io returned 502 when reading manifest": r"Error: initializing source docker://quay.io/.*: reading manifest .* in quay.io/.*: received unexpected HTTP status: 502 Bad Gateway",
     "Failed to merge MR on CEE GitLab due to 405": r"Repo-templating workflow component cleanup failed: Merging [0-9]+ failed: [Pp][Uu][Tt] .*https://gitlab.cee.redhat.com/api/.*/merge_requests/[0-9]+/merge.*message: 405 Method Not Allowed",
     "Failed to merge MR on CEE GitLab due to DNS error": r"Repo-templating workflow component cleanup failed: Merging [0-9]+ failed: [Pp][Uu][Tt] .*https://gitlab.cee.redhat.com/api/.*/merge_requests/[0-9]+/merge.*Temporary failure in name resolution",
     "Failed validating release condition": r"Release .* in namespace .* failed: .*Message:Release validation failed.*",
+    "Failed forking Repo:T TLS handshake timeout": r"Repo forking failed: Error deleting project .* net/http: TLS handshake timeout",
     "GitLab token used by test expired": r"Repo forking failed: Error deleting project .*: DELETE https://gitlab.cee.redhat.com/.*: 401 .*error: invalid_token.*error_description: Token is expired. You can either do re-authorization or token refresh",
     "Pipeline failed": r"Message:Tasks Completed: [0-9]+ \(Failed: [1-9]+,",
     "Post-test data collection failed": r"Failed to collect pipeline run JSONs",
@@ -54,20 +58,28 @@ ERRORS = {
     "Timeout waiting for snapshot to be created": r"Snapshot failed creation: context deadline exceeded",
     "Timeout waiting for test pipeline to create": r"Test Pipeline Run failed creation: context deadline exceeded",
     "Timeout waiting for test pipeline to finish": r"Test Pipeline Run failed run: context deadline exceeded",
+    "Timeout getting PaC pull number for component": r"Component failed validation: Unable to get PaC pull number for component .* in namespace .*: context deadline exceeded",
+    "Post-test data collection automatically gracefully failed": r"Failed to collect pipeline run JSONs: Failed to list PipelineRuns .*: no pipelinerun found for component .*",
 }
 
 FAILED_PLR_ERRORS = {
+    "Build Fails on s390x Due to Unresolvable Internal Brew Repository Host": r"Curl error (6): Couldn't resolve host name for .* s390x .* Error: Failed to download metadata for repo 'build': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried",
     "Can not find chroot_scan.tar.gz file": r"tar: .*/chroot_scan.tar.gz: Cannot open: No such file or directory",
     "DNF failed to download repodata from Koji": r"ERROR Command returned error: Failed to download metadata (baseurl: \"https://kojipkgs.fedoraproject.org/repos/[^ ]*\") for repository \"build\": Usable URL not found",
+    "Error 400 api error InsufficientFreeAddressesInSubnet" : r"Error allocating host: failed to launch EC2 instance for .* https response error StatusCode: 400 .* api error InsufficientFreeAddressesInSubnet: There are not enough free addresses in subnet .*",
     "Error allocating host as provision TR already exists": r"Error allocating host: taskruns.tekton.dev \".*provision\" already exists",
     "Error cannot find Dockerfile": r"Cannot find Dockerfile Dockerfile .*",
     "Error creating build containter: 403 forbidden": r"internal error: unable to copy from source .* 403 Forbidden .*",
     "Error in configuration - option config_opts['root'] must be present in your config" : r"option config_opts['root'] must be present in your config .*",
+    "Error: copying system image from manifest - 504 Gateway Time-out": r"Error: copying system image from manifest list: parsing image configuration .* 504 Gateway Time-out",
+    "Error: copying system image from manifest list: unexpected EOF": r"Error: copying system image from manifest list: writing blob: storing blob to file .* unexpected EOF",
     "Failed because of quay.io returned 502": r"level=fatal msg=.Error parsing image name .*docker://quay.io/.* Requesting bearer token: invalid status code from registry 502 .Bad Gateway.",
     "Failed because registry.access.redhat.com returned 503 when reading manifest": r"source-build:ERROR:command execution failure, status: 1, stderr: time=.* level=fatal msg=.Error parsing image name .* reading manifest .* in registry.access.redhat.com/.* received unexpected HTTP status: 503 Service Unavailable",
     "Introspection failed because of incomplete .docker/config.json": r".* level=fatal msg=\"Error parsing image name .*: getting username and password: reading JSON file .*/tekton/home/.docker/config.json.*: unmarshaling JSON at .*: unexpected end of JSON input\"",
+    "Mock failed to connect to server during probe": r"Error: Unable to connect to server",
     "RPM build failed: bool cannot be defined via typedef": r"error: .bool. cannot be defined via .typedef..*error: Bad exit status from /var/tmp/rpm-tmp..* ..build.",
     "SKIP": r"Skipping step because a previous step failed",
+    "TypeError: expected str, bytes or os.PathLike object not NoneType": r"TypeError: expected str, bytes or os.PathLike object, not NoneType",
     "buildah build failed creating build container: registry.access.redhat.com returned 403": r"Error: creating build container: internal error: unable to copy from source docker://registry.access.redhat.com/.*: copying system image from manifest list: determining manifest MIME type for docker://registry.access.redhat.com/.*: reading manifest .* in registry.access.redhat.com/.*: StatusCode: 403",
 }
 
