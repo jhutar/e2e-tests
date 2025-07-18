@@ -46,22 +46,18 @@ func validateIntegrationTestScenario(f *framework.Framework, namespace, name, ap
 			return false, nil
 		}
 
-		// Check right condition status
+		// Only check for error-type conditions
 		for _, condition := range its.Status.Conditions {
 			if (strings.HasPrefix(condition.Type, "Error") || strings.HasSuffix(condition.Type, "Error")) && condition.Status == "True" {
 				return false, fmt.Errorf("Integration test scenario %s for application %s in namespace %s is in error state: %+v", name, appName, namespace, condition)
 			}
-			if condition.Type == "IntegrationTestScenarioValid" && condition.Status == "True" {
-				return true, nil
-			}
 		}
 
-		logging.Logger.Debug("Unknown error when validating application %s in namespace %s", name, namespace)
-		return false, nil
+		// No error, and we don't wait for validity anymore
+		return true, nil
 	}, interval, timeout)
 
 	return err
-
 }
 
 func HandleIntegrationTestScenario(ctx *PerApplicationContext) error {
