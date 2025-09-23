@@ -192,7 +192,7 @@ func (g *Github) ForkRepository(sourceName, targetName string) (*github.Reposito
 			switch resp.StatusCode {
 			case 403, 500, 503:
 				{
-					// This catches errors:
+					// This catches non-critical errors which will probably fixed by re-trying:
 					// "403 Repository is already being forked." -  this happens whem more than ~3 forks of one repo is ongoing in parallel
 					//  500, 503 - "Internal server error", "No server is currently available to service your request" - just repeat the call
 					fmt.Printf("Warning, got %d: %s", resp.StatusCode, resp.Body)
