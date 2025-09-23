@@ -189,18 +189,18 @@ func (g *Github) ForkRepository(sourceName, targetName string) (*github.Reposito
 				// This meens forking is happening asynchronously
 				return true, nil
 			}
-			if resp.StatusCode == 403 {
-				// This catches error: "403 Repository is already being forked."
-				// This happens whem more than ~3 forks of one repo is ongoing in parallel
-				fmt.Printf("Warning, got 403: %s", resp.Body)
-				return false, nil
+			switch resp.StatusCode {
+			case 403, 500, 503:
+				{
+					// This catches errors:
+					// "403 Repository is already being forked." -  this happens whem more than ~3 forks of one repo is ongoing in parallel
+					//  500, 503 - "Internal server error", "No server is currently available to service your request" - just repeat the call
+					fmt.Printf("Warning, got %d: %s", resp.StatusCode, resp.Body)
+					return false, nil
+				}
+			default:
+				return false, fmt.Errorf("Error forking %s/%s: %v", g.organization, sourceName, err)
 			}
-			if resp.StatusCode == 500 {
-				// This catches error 500 seen few times
-				fmt.Printf("Warning, got 500: %s", resp.Body)
-				return false, nil
-			}
-			return false, fmt.Errorf("Error forking %s/%s: %v", g.organization, sourceName, err)
 		}
 		return true, nil
 	}, time.Second * 10, time.Minute * 30)
