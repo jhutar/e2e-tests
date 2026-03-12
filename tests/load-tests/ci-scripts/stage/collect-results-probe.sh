@@ -6,6 +6,39 @@ set -o pipefail
 
 source "$( dirname $0 )/../utils.sh"
 
+OPTION_EXIT_ON_FAIL=false
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --help)
+      echo "Usage: $0 [options] [arg1] [arg2]"
+      echo "Options:"
+      echo "  --help          Show this help message and exit"
+      echo "  --exit-on-fail  Exit with an error if load test errors are detected"
+      exit 0
+      ;;
+    --exit-on-fail)
+      OPTION_EXIT_ON_FAIL=true
+      shift
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if [[ ${#POSITIONAL_ARGS[@]} -gt 0 ]]; then
+  set -- "${POSITIONAL_ARGS[@]}"
+else
+  set --
+fi
+
 echo "[$(date --utc -Ins)] Collecting load test results"
 
 # Setup directories
@@ -100,5 +133,14 @@ python3 ci-scripts/utility_scripts/get-task-step-resources.py \
     || true
 
 } 2>&1 | tee "${ARTIFACT_DIR}/collect-results.log"
+
+if [[ "${OPTION_EXIT_ON_FAIL}" == "true" ]]; then
+    errors=$(jq -r '.results.measurements.KPI.errors // 0' "${ARTIFACT_DIR}/load-test.json")
+    if [[ "$errors" -gt "0" ]]; then
+        echo "[$(date --utc -Ins)] Failure detected, exiting with error"
+        popd
+        exit 1
+    fi
+fi
 
 popd
