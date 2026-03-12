@@ -28,19 +28,18 @@ To add a label given it's JSONPath expression:
 Task/step memory and CPU labels (stable keys)
 ---------------------------------------------
 
-Per-task, per-step memory and CPU are stored under root ``measurements`` with
-run-specific keys ``tasks[<taskname>]`` (e.g. ``tasks[ocpp01cs-app-xaean-...-build-container]``).
-Task names change every run, so Horreum cannot use a fixed JSONPath on those keys.
+Per-task, per-step memory and CPU live under ``measurements.tasks.<task>.<step>``
+(nested dict). Task keys are run-specific (e.g. ``build_buildah-oci-ta``,
+``managed_collect-data``), so Horreum cannot use a fixed JSONPath.
 
-To fix this, the collect-results probe runs ``get-task-step-resources.py``, which
-injects ``measurements.stable_task_steps``: a stable view that maps logical task
-types (e.g. ``build-container``, ``collect-data``) and step names to the same
-metric dicts. Task type is derived from the run-specific task name by suffix
-(e.g. ``*-build-container`` → ``build-container``). Horreum labels use paths like
-``$.measurements.stable_task_steps["build-container"]["build"].memory.mean`` so
-the same path works every run. Add more labels with
-``$.measurements.stable_task_steps["<task-type>"]["<step-name>"].memory.mean`` or
-``.cpu.mean``. After changing the schema, re-import it in Horreum.
+The collect-results probe runs ``get-task-step-resources.py``, which injects
+``measurements.stable_task_steps``: a stable view (same keys every run). Task
+type is derived from the run-specific name by suffix (e.g. ``*_collect-data`` →
+``collect-data``) or by Tekton short-name alias (e.g. ``buildah-oci-ta`` →
+``build-container``). Horreum labels use paths like
+``$.measurements.stable_task_steps["build-container"]["build"].memory.mean``.
+Add more with ``$.measurements.stable_task_steps["<task-type>"]["<step-name>"].memory.mean``
+or ``.cpu.mean``. After changing the schema, re-import it in Horreum.
 
 Local verification
 ------------------
